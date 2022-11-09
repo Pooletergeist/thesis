@@ -21,7 +21,7 @@ Steps_Per_Day = 24
 
 # Cell
 P_Divide = 1/24
-P_SymmDiv = 0.05
+P_SymDiv = 0.05
 P_Mutation = 0.5
 Proliferative_Capacity = 10 
 Migration_Potential = 15
@@ -81,6 +81,7 @@ class host:
                         self.do(action, obj, col, row, space)
 
     def do(self, action, obj, col, row, space):
+        print(action)
         if action != None:
             if action == "dead":
                 self.matrix[col][row] = None
@@ -123,9 +124,9 @@ class host:
 
     def __repr__(self):
         string = ""
-        for col in range(len(self.matrix)):
+        for row in range(len(self.matrix[0])):
             string += "\n"
-            for row in range(len(self.matrix[0])):
+            for col in range(len(self.matrix)):
                 cell = self.matrix[col][row]
                 if self.matrix[col][row] != None:
                     string += "1 "
@@ -154,14 +155,14 @@ class host:
 class cell:
     def __init__(self,
                 P_Divide,
-                P_SymmDiv, 
+                P_SymDiv, 
                 P_Mutation,
                 Migration_Potential, 
                 P_Death,
                 Prolif_capacity):
 
         self.p_div = P_Divide
-        self.p_divCSC = P_SymmDiv
+        self.p_divCSC = P_SymDiv
         self.p_mutate = P_Mutation
         self.p_move = Migration_Potential
         self.p_die = P_Death
@@ -302,13 +303,13 @@ def runSimulation(N_CSCs,
                   N_Days,
                   Steps_Per_Day,
                   P_Divide,
-                  P_SymmDiv,
+                  P_SymDiv,
                   P_Mutation,
                   Proliferative_Capacity,
                   Migration_Potential,
                   P_Death):
 
-    tumor = cell(P_Divide, P_SymmDiv, P_Mutation, Migration_Potential, P_Death, Proliferative_Capacity)
+    tumor = cell(P_Divide, P_SymDiv, P_Mutation, Migration_Potential, P_Death, Proliferative_Capacity)
     patient =  host(tumor)
     for i in range(N_Days * Steps_Per_Day):
         patient.time_step()
@@ -326,7 +327,7 @@ if __name__ == "__main__":
                   N_Days,
                   Steps_Per_Day,
                   P_Divide,
-                  P_SymmDiv,
+                  P_SymDiv,
                   P_Mutation,
                   Proliferative_Capacity,
                   Migration_Potential,
