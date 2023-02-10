@@ -1,0 +1,78 @@
+#
+## Feb 7.
+#
+
+# WANT: Cells report to Tree, tracks every division, location etc.
+
+class Tree:
+
+    def __init__(self, root):
+        self.root = root
+
+    def __repr__(self):
+        if self.root != None:
+            string = "----TREE----\n"
+            string += self.root.print_tree()
+        else:
+            string = "Empty"
+        return string
+
+class Node:
+    
+    def __init__(self, parent, born_location):
+        self.parent = parent
+        self.born_location = born_location
+        # filled later
+        self.dead_location = None
+        self.visited_locations = [born_location]
+        self.children = []
+
+    ### When things happen on the Grid: ###
+    def track_division(self, child_location):
+        # make a node for the child
+        child_node = Node(parent=self, born_location=child_location)
+        self.children.append(child_node)
+        return child_node
+
+    def track_death(self, dead_location):
+        # QUESTION? should this show up in visited locations?
+        self.dead_location = dead_location
+
+    def track_move(self, location):
+        self.visited_locations.append(location)
+
+    ## display ##
+    ## pretty print: vertical 
+    # take the root, check all your children on same line, 
+    # but they need to build subtrees...
+
+    ## less pretty print: horizontal
+    # level of indent indicates depth in tree
+    # Given, indent. add self. if children, add them. return substring.
+    def print_tree(self, indent = ""):
+        print("called: " + str(self))
+        string = indent + "0" + "\n" 
+        if self.children == []:
+            print("emptych : " + str(self))
+            return string 
+        else:
+            print("haskids: " + str(self))
+            indent += "\t"
+            for child in self.children:
+                string += child.print_tree(indent)
+        return string 
+
+
+    def list_ancestors(self, string = ""):
+        ''' messy recursive ll traversal '''
+        if self.parent == None:
+            return string + str(self)
+        else:
+            # add parent
+            string += self.parent.list_ancestors(string)
+            # add self
+            string += str(self)
+            return string
+            
+    def __repr__(self): 
+        return str(self.visited_locations)
