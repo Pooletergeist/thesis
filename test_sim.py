@@ -14,6 +14,13 @@ Y = 2
 from Body import Body
 from Hazard import Hazard
 from Resource import Resource
+from Visualizer import Visualizer
+##
+import random as rand
+import numpy as np
+
+rand.seed(12)
+np.random.seed(12)
 
 r = Resource(WIDTH, HEIGHT)
 h = Hazard(WIDTH, HEIGHT)
@@ -73,6 +80,14 @@ print(b.hazard_model)
 print("body: ")
 print(b)
 
+print(b.width)
+print(b.height)
+
+v = Visualizer(rows=b.height, columns=b.width, body=b)
+b.update()
+b.update()
+
+v = Visualizer(rows=b.height, columns=b.width, body=b)
 ## b) have cell update, die from hazards
 
 #4. let the cells go wild.

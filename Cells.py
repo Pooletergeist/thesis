@@ -40,15 +40,21 @@ class Cell:
         daughter_location = None
         # Mutate?
         if hazards > self.hazard_resistance:
+            print("ded")
             # Die
             self.dead = True
             if self.tree_node != None:
                 self.tree_node.track_death((self.x,self.y))
         elif space != []:
             # Move - QUESTION: leave grid to update my position?
-            if rand.random() < self.motility_rate:
+            move_chance = rand.random()
+            print(move_chance)
+            if move_chance < self.motility_rate:
+                print("moving")
                 rand.shuffle(space)
+                print(space)
                 destination = space.pop()
+                print(destination)
                 space.append((self.x,self.y)) 
                 if self.tree_node != None:
                     self.tree_node.track_move(destination)
@@ -81,10 +87,6 @@ class Cell:
     def set_tree_node(self, node):
         self.tree_node = node
 
-    def __str__(self):
-        '''readable debug. just gives cell id'''
-        return "X"
-
     def __repr__(self):
         string = "mutation rate: " + str(self.mutation_rate) + "\n"
         string += "proliferation_rate: " + str(self.proliferation_rate) + "\n"
@@ -95,3 +97,13 @@ class Cell:
         string += "dead: " + str(self.dead) + "\n"
         return string
 
+
+## just use id function on cells ##
+class debugCell(Cell):
+    
+    def __init__(self, mutation_rate=0, proliferation_rate=0, hazard_resistance=0, motility_rate=0, x=0, y=0, tree=None, idn=None):
+        super().__init__(mutation_rate, proliferation_rate, hazard_resistance, motility_rate, x, y, tree)
+        self.idn = idn
+
+    def __repr__(self):
+        return str(self.idn)

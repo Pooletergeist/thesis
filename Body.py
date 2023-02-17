@@ -4,13 +4,14 @@
 #
 #
 import random as rand
+from Visualizer import Visualizer
 
 COST_OF_LIVING = 0.1
 PROLIFERATIVE_COST = 0.5
     
 class Body:
 
-    def __init__(self, width, height, resource=None, hazard=None):
+    def __init__(self, width, height, resource=None, hazard=None, vis=None):
         # initializes width-many lists of length height: 
         self.grid = [[None]*height for n in range(width)]
         # grid[i][j], i is width, j is height
@@ -21,12 +22,18 @@ class Body:
         # should these be objects?
         self.resource_model = resource
         self.hazard_model = hazard
+        self.visualizer = vis
 
     ### UPDATE ####
-    def update(self):
+    def update(self, visualize=False):
         self.update_resources()
+        print("r-done")
         self.update_hazards()
+        print("h-done")
         self.update_cells()
+        print("c-done")
+        if visualize:
+            v = Visualizer(self.width, self.height, self)
         
     def update_resources(self):
         if self.resource_model != None:
@@ -46,31 +53,37 @@ class Body:
                     space = self.adjacent_spaces(x,y), 
                     resources = self.resource_model.get_resource_amount(x,y),
                     hazards = self.hazard_model.get_hazard_amount(x,y))
+            print("done cell update")
+            print(self.live_cells)
 
             if dest != None:
+                print('moving')
                 # Move the cell
                 self.move_cell(x,y, dest[0], dest[1]) 
                 # Update cell's position
                 cell.set_location(dest[0], dest[1])
 
             if daughter_tuple != (None,None):
+                print('birthing')
                 # Place the daughter
                 print(daughter_tuple)
                 self.place_cell(daughter_tuple[0],
                                 daughter_tuple[1][0],
                                 daughter_tuple[1][1])
+                print("placed daughter. Alive: " + str(self.live_cells))
                 # consume resources 
                 self.resource_model.deplete_resources(PROLIFERATIVE_COST,
                                                         x,
                                                         y)
             if dead != False:
+                self.remove_cell(x,y)
                 pass # for now
                         
             # reduce hazards?
 
     ### MOVEMENT HELPERS ###
     def place_cell(self, cell, x, y):
-        '''puts cell at gridspace (x,y)'''
+        '''puts cell at gridspace (x,y) AND adds to live_cells'''
         self.grid[x][y] = cell
         self.live_cells.append(cell)
 
@@ -79,7 +92,8 @@ class Body:
         self.grid[x][y] = None
 
     def move_cell(self, x1, y1, x2, y2):
-        self.place_cell(self.grid[x1][y1], x2, y2)
+        self.grid[x2][y2] = self.grid[x1][y1]
+        # self.place_cell(self.grid[x1][y1], x2, y2) vicious bug here
         self.remove_cell(x1,y1)
 
     ### SPACE SELECTION ###
