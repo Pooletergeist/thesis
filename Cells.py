@@ -72,9 +72,11 @@ class Cell:
                                 y = daughter_location[1]
                                 )
                     if self.tree_node != None:
-                        daughter_node = self.tree_node.track_division( 
-                                                        daughter_location)
-                        daughter.set_tree_node(daughter_node)
+                        daughter0_node, daughter1_node  = self.tree_node.track_division((self.x,self.y), daughter_location,)
+                        # give the cell ref to its tree node
+                        daughter.set_tree_node(daughter1_node)
+                        # this cell is now a daughter of its former self
+                        self.set_tree_node(daughter0_node)
         return (destination, (daughter, daughter_location), self.dead)
 
     def set_location(self, x,y):

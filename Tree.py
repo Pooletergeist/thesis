@@ -28,11 +28,15 @@ class Node:
         self.children = []
 
     ### When things happen on the Grid: ###
-    def track_division(self, child_location):
-        # make a node for the child
-        child_node = Node(parent=self, born_location=child_location)
-        self.children.append(child_node)
-        return child_node
+    def track_division(self, my_location, child_location):
+        '''make 2 nodes corresponding to the daughters of this division'''
+        # make nodes for both children
+        child0_node = Node(parent=self, born_location=child_location)
+        child1_node = Node(parent=self, born_location=my_location)
+        # add them to the tree
+        self.children.append(child0_node)
+        self.children.append(child1_node)
+        return child0_node, child1_node
 
     def track_death(self, dead_location):
         # QUESTION? should this show up in visited locations?
