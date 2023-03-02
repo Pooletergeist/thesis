@@ -33,6 +33,7 @@ class Cell:
         self.y = y
         self.tree_node = t
         self.dead = False
+        self.color = (0,0,0) # default cells to black rgb
 
     def update(self, space, resources, hazards):
         destination = None # would samelocation be fewer checks?
@@ -72,11 +73,16 @@ class Cell:
                                 y = daughter_location[1]
                                 )
                     if self.tree_node != None:
+                        # clear the former tree-node's reference to this cell.
+                        self.tree_node.set_cell_reference(None)
+                        # make tree nodes for the products of the division/
                         daughter0_node, daughter1_node  = self.tree_node.track_division((self.x,self.y), daughter_location,)
-                        # give the cell ref to its tree node
-                        daughter.set_tree_node(daughter1_node)
-                        # this cell is now a daughter of its former self
+                        # give the cells refs to new tree nodes
                         self.set_tree_node(daughter0_node)
+                        daughter.set_tree_node(daughter1_node)
+                        # give the tree nodes refs to cells
+                        self.tree_node.set_cell_reference(self)
+                        daughter.tree_node.set_cell_reference(self)
         return (destination, (daughter, daughter_location), self.dead)
 
     def set_location(self, x,y):
@@ -88,6 +94,9 @@ class Cell:
 
     def set_tree_node(self, node):
         self.tree_node = node
+
+    def set_color(self, color):
+        self.color = color
 
     def __repr__(self):
         string = "mutation rate: " + str(self.mutation_rate) + "\n"

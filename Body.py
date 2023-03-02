@@ -22,7 +22,7 @@ class Body:
         # should these be objects?
         self.resource_model = resource
         self.hazard_model = hazard
-        self.visualizer = vis
+        self.visualizer = vis # UNUSED
 
     ### UPDATE ####
     def update(self, visualize=False):
@@ -140,6 +140,13 @@ class Body:
 
 
     ### DISPLAY ###
+    def get_cell_color(self, x,y):
+        color = (255,255,255) # default empty to rgb white.
+        if not self.is_empty(x,y):
+            color = self.grid[x][y].color
+        return color
+         
+
     def __repr__(self):
         string = ""
         for y in range(self.height):

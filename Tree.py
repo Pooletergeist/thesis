@@ -19,13 +19,15 @@ class Tree:
 
 class Node:
     
-    def __init__(self, parent, born_location):
+    def __init__(self, parent, born_location, cell=None):
         self.parent = parent
         self.born_location = born_location
         # filled later
         self.dead_location = None
         self.visited_locations = [born_location]
         self.children = []
+        # dangerous pointer to cell
+        self.cell_reference = cell
 
     ### When things happen on the Grid: ###
     def track_division(self, my_location, child_location):
@@ -44,6 +46,18 @@ class Node:
 
     def track_move(self, location):
         self.visited_locations.append(location)
+
+    def set_cell_reference(self, cell):
+        self.cell_reference = cell
+
+    def add_child(self, cell): # only used in test rn
+        self.children.append(cell)
+
+    def color_subtree(self, color_rgb):
+        self.cell_reference.set_color(color_rgb)
+        if self.children != []:
+            for child in self.children:
+                child.color_subtree(color_rgb)
 
     ## display ##
     ## pretty print: vertical 

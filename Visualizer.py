@@ -82,18 +82,18 @@ class Visualizer(Frame):
     def drawPixelAt(self,r,c,edge='black'):
         rect = self.squareAt(r,c)
         #value = self.get(r,c)
-        value = 0
+        value = (255,255,255) # default rgb to white
         if self.body != None:
-            if not self.body.is_empty(c,r):
-                value = 1
+            value = self.body.get_cell_color(c,r)
         shade = self.shadeOf(value)
         self.canvas.create_rectangle(rect, fill=shade, outline=edge)
 
-    def shadeOf(self,value):
-        if value == 0:
-            return 'white'
-        else:
-            return 'blue'
+    def shadeOf(self,value_rgb):
+        #if value == 0:
+        #    return 'white'
+        #else:
+        #    return 'blue'
+        return '#%02x%02x%02x' % value_rgb # Formats value_rgb as hexdigits
 
     #
     # keypress - react to a keypress
