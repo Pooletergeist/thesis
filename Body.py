@@ -140,10 +140,21 @@ class Body:
 
 
     ### DISPLAY ###
-    def get_cell_color(self, x,y):
+    def get_cell_color(self, x,y, mode):
         color = (255,255,255) # default empty to rgb white.
-        if not self.is_empty(x,y):
-            color = self.grid[x][y].color
+        if mode == "Cell":
+            if not self.is_empty(x,y):
+                color = self.grid[x][y].color
+        elif mode == "Str":
+            if not self.is_empty(x,y):
+                color = (5,5,5)
+        elif mode == "Int":
+            if not self.is_empty(x,y):
+                nmbr = self.grid[x][y] * 100
+                color = (nmbr, nmbr, nmbr)
+        else:
+            raise Exception("get_cell_color called with bad mode: " + mode + 
+                " \n => check the mode passed in call to visualizer.display?")
         return color
          
 

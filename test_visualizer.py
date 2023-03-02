@@ -1,5 +1,5 @@
 #
-## Feb. 16
+## Mar. 3
 #
 #
 
@@ -24,25 +24,24 @@ WIDTH = 50
 HEIGHT = 50
 
 ## display empty 
-print("display empty (all cells black)")
 b = Body(WIDTH, HEIGHT)
 print(b.width)
 print(b.height)
 v = Visualizer(rows = b.width, columns = b.height, body=b)
+v.display("display empty (all cells white)", mode="Str")
+
 
 ## display full
-print("display full (all cells white)")
 for c in range(WIDTH):
     for r in range(HEIGHT):
         b.place_cell("X", c, r)
 
-v2 = Visualizer(rows=b.width, columns=b.height, body=b)
+v.display("intended full (all cells black)", mode="Str")
 
 ## display patterned
-print("display patterned. (row+col)mod3==0 are white")
 for c in range(WIDTH):
     for r in range(HEIGHT):
         if (r+c)%3!=0:
             b.remove_cell(c, r)
-
-v3 = Visualizer(rows=b.width, columns=b.height, body=b)
+v.display("(r+c) mod 3 = 0 are black", mode = "Str")
+v.display("error", mode = "wrong")

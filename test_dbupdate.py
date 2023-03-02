@@ -9,7 +9,7 @@ from Tree import Tree, Node
 from Cells import debugCell
 import random as rand
 
-rand.seed(423) # run it 3x and it breaks... Seed not constant?
+rand.seed(423) # run it 3x and it breaks... Seed not constant? (no numpy seed)
 
 WIDTH = 4
 HEIGHT = 5

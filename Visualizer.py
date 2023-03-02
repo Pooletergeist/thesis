@@ -1,11 +1,11 @@
 #
 #
-# Feb 15
-#
+# Mar 2: Goals -> visualizer has display method, title options, and can display
+# for Cells, Ints, and Strs with flags "Cell", "Int", and "Str" respectively
 
 from tkinter import *
 
-## tradeoff? passing reference to body object vs passing grid by copy
+GRIDLINE_COLOR = "grey"
 
 class Visualizer(Frame):
     LEFT = 8 # window margin, used to locate pixel corners in squareAt
@@ -16,10 +16,11 @@ class Visualizer(Frame):
         self.rows = rows
         self.columns = columns
         self.body = body
-        self.set_dimensions() # make window size
+        self.set_dimensions() # sets self.width, self.height for window size
 
+    def display(self, title, mode="Cell"):
         self.root = Tk() # tk object. toplevel/root window
-        self.root.title("testing") # title the pop-up window
+        self.root.title(title) # title the pop-up window
         Frame.__init__(self, self.root) # some tk object?
         # canvas is some tk object
         self.canvas = Canvas(self.root, width=self.width+10, 
@@ -29,7 +30,7 @@ class Visualizer(Frame):
         self.pack() # unsure what this does.
         
         # try to get it to display
-        self.render()
+        self.render(mode)
         # self.after(10,self.tick) implement tick method
         self.mainloop()
 
@@ -70,21 +71,21 @@ class Visualizer(Frame):
       return (self.LEFT+column*self.size, self.TOP+row*self.size, \
               self.LEFT+(column+1)*self.size, self.TOP+(row+1)*self.size)
 
-    def render(self):
+    def render(self, mode):
         self.canvas.delete('all')
         print("rows:" + str(self.rows))
         print("cols", self.columns)
         for r in range(self.rows):
             for c in range(self.columns):
-                self.drawPixelAt(r,c)
+                self.drawPixelAt(r,c, mode)
 
 
-    def drawPixelAt(self,r,c,edge='black'):
+    def drawPixelAt(self,r,c, mode, edge=GRIDLINE_COLOR):
         rect = self.squareAt(r,c)
         #value = self.get(r,c)
         value = (255,255,255) # default rgb to white
         if self.body != None:
-            value = self.body.get_cell_color(c,r)
+            value = self.body.get_cell_color(c,r, mode)
         shade = self.shadeOf(value)
         self.canvas.create_rectangle(rect, fill=shade, outline=edge)
 

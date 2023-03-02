@@ -21,6 +21,7 @@ b.place_cell(root, 0,0)
 print(b)
 
 v = Visualizer(W,H, b)
+v.display("just one cell 0,0")
 
 print(root.color)
 root_tree_node = Node(parent=None, born_location=(0,0), cell=root)
@@ -29,7 +30,7 @@ print(root.color)
 
 #print(b.get_cell_color(0,0))
 
-v = Visualizer(W,H, b)
+v.display("color changed to " + str(root.color))
 
 c1 = Cell(0,0,0,0,0,1)
 b.place_cell(c1, 0,1)
@@ -47,14 +48,13 @@ c2_2_tree_node = Node(parent = c2_tree_node, born_location = (1,1), cell = c2_2)
 ## make it known
 c2_tree_node.add_child(c2_2_tree_node)
 
-v = Visualizer(W,H, b)
-
-print(c2.color)
+v.display("+ new cells at 01, 10, and 11")
+#print(c2.color)
 c2_tree_node.color_subtree(COLOR2)
-print(c2.color)
-print(c2_2.color)
+#print(c2.color)
+#print(c2_2.color)
 
-v = Visualizer(W,H, b)
+v.display("subtree 10 and 11 colored")
 
 
 

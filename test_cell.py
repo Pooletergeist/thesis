@@ -4,7 +4,7 @@
 ## Tests:
 # init, set_loc, update-die, update-move, update-move&die
 #
-#
+# Mar 2: it takes a second...
 
 from Cells import *
 import random as rand
