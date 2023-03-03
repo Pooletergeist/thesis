@@ -35,13 +35,14 @@ class Cell:
         self.dead = False
         self.color = (0,0,0) # default cells to black rgb
 
-    def update(self, space, resources, hazards):
+    def update(self, space, resources, hazards, verbose=False):
         destination = None # would samelocation be fewer checks?
         daughter = None
         daughter_location = None
         # Mutate?
         if hazards > self.hazard_resistance:
-            print("ded")
+            if verbose:
+                print("ded")
             # Die
             self.dead = True
             if self.tree_node != None:
@@ -49,13 +50,16 @@ class Cell:
         elif space != []:
             # Move - QUESTION: leave grid to update my position?
             move_chance = rand.random()
-            print(move_chance)
+            if verbose:
+                print("move chance", move_chance)
             if move_chance < self.motility_rate:
-                print("moving")
                 rand.shuffle(space)
-                print(space)
+                if verbose:
+                    print("moving")
+                    print(space)
                 destination = space.pop()
-                print(destination)
+                if verbose:
+                    print("move to: ", destination) 
                 space.append((self.x,self.y)) 
                 if self.tree_node != None:
                     self.tree_node.track_move(destination)
@@ -82,7 +86,7 @@ class Cell:
                         daughter.set_tree_node(daughter1_node)
                         # give the tree nodes refs to cells
                         self.tree_node.set_cell_reference(self)
-                        daughter.tree_node.set_cell_reference(self)
+                        daughter.tree_node.set_cell_reference(daughter)
         return (destination, (daughter, daughter_location), self.dead)
 
     def set_location(self, x,y):

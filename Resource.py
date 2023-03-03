@@ -24,14 +24,14 @@ class Resource:
         for x in range(self.width):
             for y in range(self.height):
                 amount = abs(numpy.random.laplace(loc=0.0, scale = 0.5))
-                self.grid[x][y] += amount
+                self.grid[x][y] = amount
 
     def distribute_few_resources(self, amount, n):
         '''Gives resources specified by "amount" to "n" random grid positions'''
         for i in range(n):
             x = rand.randint(0, self.width-1)
             y = rand.randint(0, self.height-1)
-            print(x,y)
+            #print(x,y)
             self.grid[x][y] += amount
 
     def deplete_resources(self, amount, x, y):
@@ -40,6 +40,8 @@ class Resource:
 
     def get_resource_amount(self, x,y):
         '''Reports resource amount at cell (x,y)'''
+        #print("x: ", x)
+        #print("y: ", y)
         return self.grid[x][y]
 
     def update(self):

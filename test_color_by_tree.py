@@ -6,7 +6,7 @@
 
 from Visualizer import Visualizer
 from Body import Body
-from Cells import Cell
+from Cell import Cell
 from Tree import Node, Tree # do I need tree?
 
 W = 50
@@ -20,7 +20,7 @@ root = Cell(0,0,0,0,0,0)
 b.place_cell(root, 0,0)
 print(b)
 
-v = Visualizer(W,H, b)
+v = Visualizer(W,H,b)
 v.display("just one cell 0,0")
 
 print(root.color)

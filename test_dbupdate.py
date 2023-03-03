@@ -6,7 +6,7 @@ from Body import Body
 from Hazard import Hazard
 from Resource import Resource
 from Tree import Tree, Node
-from Cells import debugCell
+from Cell import debugCell
 import random as rand
 
 rand.seed(423) # run it 3x and it breaks... Seed not constant? (no numpy seed)

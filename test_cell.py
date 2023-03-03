@@ -6,7 +6,7 @@
 #
 # Mar 2: it takes a second...
 
-from Cells import *
+from Cell import *
 import random as rand
 
 rand.seed(123)

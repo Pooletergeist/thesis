@@ -1,7 +1,10 @@
 #
 #
 # Mar 2: Goals -> visualizer has display method, title options, and can display
-# for Cells, Ints, and Strs with flags "Cell", "Int", and "Str" respectively
+# for Cells, Hazards&Resources, and Strs with flags "Cell", "Hazard",
+# "Resources", and "Str" respectively
+
+## TODO: change argument order rows,cols
 
 from tkinter import *
 
@@ -11,14 +14,14 @@ class Visualizer(Frame):
     LEFT = 8 # window margin, used to locate pixel corners in squareAt
     TOP = 8 # window margin "^"
 
-    def __init__(self, rows=16, columns=16, body=None):
+    def __init__(self, columns=16, rows=16, body=None):
         # constants to play nice
         self.rows = rows
         self.columns = columns
         self.body = body
         self.set_dimensions() # sets self.width, self.height for window size
 
-    def display(self, title, mode="Cell"):
+    def display(self, title, mode="Cell", verbose=False):
         self.root = Tk() # tk object. toplevel/root window
         self.root.title(title) # title the pop-up window
         Frame.__init__(self, self.root) # some tk object?
@@ -30,7 +33,7 @@ class Visualizer(Frame):
         self.pack() # unsure what this does.
         
         # try to get it to display
-        self.render(mode)
+        self.render(mode, verbose)
         # self.after(10,self.tick) implement tick method
         self.mainloop()
 
@@ -71,10 +74,11 @@ class Visualizer(Frame):
       return (self.LEFT+column*self.size, self.TOP+row*self.size, \
               self.LEFT+(column+1)*self.size, self.TOP+(row+1)*self.size)
 
-    def render(self, mode):
+    def render(self, mode, verbose):
         self.canvas.delete('all')
-        print("rows:" + str(self.rows))
-        print("cols", self.columns)
+        if verbose:
+            print("vis rows:" + str(self.rows))
+            print("vis cols", self.columns)
         for r in range(self.rows):
             for c in range(self.columns):
                 self.drawPixelAt(r,c, mode)

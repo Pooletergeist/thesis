@@ -27,7 +27,7 @@ HEIGHT = 50
 b = Body(WIDTH, HEIGHT)
 print(b.width)
 print(b.height)
-v = Visualizer(rows = b.width, columns = b.height, body=b)
+v = Visualizer(rows = b.height, columns = b.width, body=b)
 v.display("display empty (all cells white)", mode="Str")
 
 

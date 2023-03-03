@@ -25,52 +25,63 @@ class Body:
         self.visualizer = vis # UNUSED
 
     ### UPDATE ####
-    def update(self, visualize=False):
-        self.update_resources()
-        print("r-done")
-        self.update_hazards()
-        print("h-done")
-        self.update_cells()
-        print("c-done")
+    def update(self, visualize=False, verbose=False, hint=True):
+        self.update_resources(verbose)
+        if verbose or hint:
+            print("r-done")
+        self.update_hazards(verbose)
+        if verbose or hint:
+            print("h-done")
+        self.update_cells(verbose)
+        if verbose or hint:
+            print("c-done")
         if visualize:
             v = Visualizer(self.width, self.height, self)
         
-    def update_resources(self):
+    def update_resources(self, verbose):
         if self.resource_model != None:
             self.resource_model.update()
 
-    def update_hazards(self):
+    def update_hazards(self, verbose):
         if self.hazard_model != None:
             self.hazard_model.update()
 
-    def update_cells(self):
+    def update_cells(self, verbose):
         rand.shuffle(self.live_cells) # this better be in-place under the hood
-        print(self.live_cells)
+        if verbose:
+            print(self.live_cells)
         for cell in self.live_cells:
-            print(cell)
+            if verbose:
+                print(cell)
             x,y = cell.get_location()
             dest, daughter_tuple, dead = cell.update(
                     space = self.adjacent_spaces(x,y), 
                     resources = self.resource_model.get_resource_amount(x,y),
-                    hazards = self.hazard_model.get_hazard_amount(x,y))
-            print("done cell update")
-            print(self.live_cells)
+                    hazards = self.hazard_model.get_hazard_amount(x,y), 
+                    verbose = verbose)
+            if verbose:
+                print("done cell update")
+                print(self.live_cells)
 
             if dest != None:
-                print('moving')
+                if verbose:
+                    print('body -> moving')
                 # Move the cell
                 self.move_cell(x,y, dest[0], dest[1]) 
                 # Update cell's position
                 cell.set_location(dest[0], dest[1])
 
             if daughter_tuple != (None,None):
-                print('birthing')
+                if verbose:
+                    print('birthing')
                 # Place the daughter
-                print(daughter_tuple)
+                if verbose:
+                    print(daughter_tuple)
                 self.place_cell(daughter_tuple[0],
                                 daughter_tuple[1][0],
                                 daughter_tuple[1][1])
-                print("placed daughter. Alive: " + str(self.live_cells))
+                if verbose:
+                    print("placed daughter. Alive: " + str(self.live_cells))
                 # consume resources 
                 self.resource_model.deplete_resources(PROLIFERATIVE_COST,
                                                         x,
@@ -148,9 +159,14 @@ class Body:
         elif mode == "Str":
             if not self.is_empty(x,y):
                 color = (5,5,5)
-        elif mode == "Int":
-            if not self.is_empty(x,y):
-                nmbr = self.grid[x][y] * 100
+        elif mode == "Resource":
+            if self.resource_model != None:
+                nmbr = round(self.resource_model.get_resource_amount(x,y) * 100)
+                #print(nmbr)
+                color = (nmbr, nmbr, nmbr)
+        elif mode == "Hazard":
+            if self.hazard_model != None:
+                nmbr = round(self.hazard_model.get_hazard_amount(x,y) * 100)
                 color = (nmbr, nmbr, nmbr)
         else:
             raise Exception("get_cell_color called with bad mode: " + mode + 

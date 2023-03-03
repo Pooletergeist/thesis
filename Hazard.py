@@ -3,6 +3,7 @@
 ## Feb. 3 (copy of Resource.py)
 #
 #
+## Mar 2: must export a "get_hazard_amount" for visualizing
 
 import random as rand
 import numpy # for laplace
@@ -21,7 +22,7 @@ class Hazard:
         for x in range(self.width):
             for y in range(self.height): 
                 amount = abs(numpy.random.laplace(loc=0.0, scale = 0.5))
-                self.grid[x][y] += amount
+                self.grid[x][y] = amount
 
     def deplete_hazards(self, amount, x, y):
         '''Removes hazards specified by "amount" from space on grid (x,y)'''

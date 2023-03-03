@@ -54,7 +54,8 @@ class Node:
         self.children.append(cell)
 
     def color_subtree(self, color_rgb):
-        self.cell_reference.set_color(color_rgb)
+        if self.cell_reference != None:
+            self.cell_reference.set_color(color_rgb)
         if self.children != []:
             for child in self.children:
                 child.color_subtree(color_rgb)
