@@ -8,20 +8,24 @@
 import random as rand
 import numpy # for laplace
 
+## peril scales laplace. expect float 0->1
+
 class Hazard:
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, peril=0.5):
         # initializes width-many lists of length height: 
         self.grid = [[0]*height for n in range(width)]
         # grid[i][j], i is width, j is height
         self.width = width
         self.height = height
+        self.peril=peril
 
     def create_hazards(self):
         '''draws hazard from positive laplace for each grid position'''
         for x in range(self.width):
             for y in range(self.height): 
-                amount = abs(numpy.random.laplace(loc=0.0, scale = 0.5))
+                amount = abs(numpy.random.laplace(loc=0.0, 
+                                                scale = self.peril))
                 self.grid[x][y] = amount
 
     def deplete_hazards(self, amount, x, y):

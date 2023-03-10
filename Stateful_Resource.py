@@ -1,8 +1,15 @@
 #
 #
-## Mar. 9
+## Mar. 9 
 #
 #
+#### V1
+# TODO: grid prior and grid post? 
+# INTERFACE: communicate cell's cost to resource
+#
+#### V2 - ENERGY BUDGET
+# INTERFACE: Cells pickup what they can up to some budget, burn on prolif..
+# when resources update, communicate cell's cost to square
 
 import random as rand
 import numpy
@@ -38,7 +45,7 @@ class Resource:
             #print(x,y)
             self.grid[x][y] += amount
 
-    def deplete_resources(self, amount, x, y):
+    def deplete_resource_at(self, amount, x, y):
         '''Removes resources specified by "amount" from space on grid (x,y)'''
         self.grid[x][y] -= amount
 

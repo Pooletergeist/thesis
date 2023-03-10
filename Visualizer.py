@@ -1,14 +1,11 @@
 #
-#
-# Mar 2: Goals -> visualizer has display method, title options, and can display
-# for Cells, Hazards&Resources, and Strs with flags "Cell", "Hazard",
-# "Resources", and "Str" respectively
-
-## TODO: change argument order rows,cols
+# Mar. 9: default to no gridlines, min cell size 1 pixel
+# 
 
 from tkinter import *
 
 GRIDLINE_COLOR = "grey"
+MIN_PIXEL_SIZE = 1
 
 class Visualizer(Frame):
     LEFT = 8 # window margin, used to locate pixel corners in squareAt
@@ -16,12 +13,12 @@ class Visualizer(Frame):
 
     def __init__(self, columns=16, rows=16, body=None):
         # constants to play nice
-        self.rows = rows
         self.columns = columns
+        self.rows = rows
         self.body = body
         self.set_dimensions() # sets self.width, self.height for window size
 
-    def display(self, title, mode="Cell", verbose=False):
+    def display(self, title, mode="Cell", verbose=False, gridlines=False):
         self.root = Tk() # tk object. toplevel/root window
         self.root.title(title) # title the pop-up window
         Frame.__init__(self, self.root) # some tk object?
@@ -33,7 +30,7 @@ class Visualizer(Frame):
         self.pack() # unsure what this does.
         
         # try to get it to display
-        self.render(mode, verbose)
+        self.render(mode, verbose, gridlines)
         # self.after(10,self.tick) implement tick method
         self.mainloop()
 
@@ -42,9 +39,12 @@ class Visualizer(Frame):
         '''jimcopy. establishes self.size, which determines the size of pixels 
         as square boxes such that they can evenly fill the width and height 
         of the grid, within maxwidth and maxheight'''
-        minsize = 4
+        ## Note: max grid dimensions on my machine:
+        ## minsize=4: window sizes to about 435 in width, 263 in height.
+        ## minsize=1: window sizes to 1730 width, 1050 height max.
+        minsize = MIN_PIXEL_SIZE
         maxsize = 32
-        maxwidth = 1024
+        maxwidth = 1024 
         maxheight = 512
         # set pixelsize relative to windowsize/#pixels
         xsize = maxwidth // self.columns
@@ -74,24 +74,27 @@ class Visualizer(Frame):
       return (self.LEFT+column*self.size, self.TOP+row*self.size, \
               self.LEFT+(column+1)*self.size, self.TOP+(row+1)*self.size)
 
-    def render(self, mode, verbose):
+    def render(self, mode, verbose, gridlines):
         self.canvas.delete('all')
         if verbose:
             print("vis rows:" + str(self.rows))
             print("vis cols", self.columns)
         for r in range(self.rows):
             for c in range(self.columns):
-                self.drawPixelAt(r,c, mode)
+                self.drawPixelAt(r,c, mode, gridlines=gridlines)
 
 
-    def drawPixelAt(self,r,c, mode, edge=GRIDLINE_COLOR):
+    def drawPixelAt(self,r,c, mode, edge=GRIDLINE_COLOR, gridlines=True):
         rect = self.squareAt(r,c)
         #value = self.get(r,c)
         value = (255,255,255) # default rgb to white
         if self.body != None:
             value = self.body.get_cell_color(c,r, mode)
         shade = self.shadeOf(value)
-        self.canvas.create_rectangle(rect, fill=shade, outline=edge)
+        if gridlines:
+            self.canvas.create_rectangle(rect, fill=shade, outline=edge)
+        else:
+            self.canvas.create_rectangle(rect, fill=shade, outline=shade)
 
     def shadeOf(self,value_rgb):
         #if value == 0:

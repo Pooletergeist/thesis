@@ -1,6 +1,6 @@
 #
 #
-## Feb. 9
+## Mar. 9 ## UNIMPLEMENTED: fancyResource. Gets pointer or loop in call DENSITY
 #
 #
 import random as rand
@@ -25,24 +25,33 @@ class Body:
         self.visualizer = vis # UNUSED
 
     ### UPDATE ####
-    def update(self, visualize=False, verbose=False, hint=True):
-        self.update_resources(verbose)
+    def update(self, visualize=False, verbose=False, hint=True, 
+                use_density=False):
+        self.update_resources(verbose, use_density)
         if verbose or hint:
             print("r-done")
-        self.update_hazards(verbose)
+        self.update_hazards(verbose, use_density)
         if verbose or hint:
             print("h-done")
         self.update_cells(verbose)
         if verbose or hint:
             print("c-done")
         if visualize:
+            # messy
             v = Visualizer(self.width, self.height, self)
+            v.display()
         
-    def update_resources(self, verbose):
+    def update_resources(self, verbose, use_density):
+        density = 1 # default, don't influence scaling
+        if use_density:
+           density =  
         if self.resource_model != None:
-            self.resource_model.update()
+            self.resource_model.update(density)
 
-    def update_hazards(self, verbose):
+    def update_hazards(self, verbose, use_density):
+        density = 1
+        if use_density:
+            density = 
         if self.hazard_model != None:
             self.hazard_model.update()
 
