@@ -1,6 +1,6 @@
 #
 #
-## Mar. 9 ## UNIMPLEMENTED: fancyResource. Gets pointer or loop in call DENSITY
+## Mar. 13 - GOAL: support get_density_at
 #
 #
 import random as rand
@@ -25,12 +25,11 @@ class Body:
         self.visualizer = vis # UNUSED
 
     ### UPDATE ####
-    def update(self, visualize=False, verbose=False, hint=True, 
-                use_density=False):
-        self.update_resources(verbose, use_density)
+    def update(self, visualize=False, verbose=False, hint=True):
+        self.update_resources(verbose)
         if verbose or hint:
             print("r-done")
-        self.update_hazards(verbose, use_density)
+        self.update_hazards(verbose)
         if verbose or hint:
             print("h-done")
         self.update_cells(verbose)
@@ -41,17 +40,11 @@ class Body:
             v = Visualizer(self.width, self.height, self)
             v.display()
         
-    def update_resources(self, verbose, use_density):
-        density = 1 # default, don't influence scaling
-        if use_density:
-           density =  
+    def update_resources(self, verbose):
         if self.resource_model != None:
-            self.resource_model.update(density)
+            self.resource_model.update()
 
-    def update_hazards(self, verbose, use_density):
-        density = 1
-        if use_density:
-            density = 
+    def update_hazards(self, verbose):
         if self.hazard_model != None:
             self.hazard_model.update()
 
@@ -101,6 +94,34 @@ class Body:
                         
             # reduce hazards?
 
+    ### DENSITY HELPER ###
+    def get_density_at(self, x, y):
+        '''returns 0-1 density around space (x,y)'''
+        # Now, maximal density is a cell, surrounded by 8 others.
+        # minimal is all empty spaces.
+        # QUESTION: since what matters is movement in and out, the center cell 
+        # shouldn't matter?
+        num_neighbors = 0
+        if not self.is_empty(x-1, y-1):
+            num_neighbors += 1
+        if not self.is_empty(x-1, y):
+            num_neighbors += 1
+        if not self.is_empty(x-1, y+1):
+            num_neighbors += 1
+        if not self.is_empty(x, y-1):
+            num_neighbors += 1
+        if not self.is_empty(x, y):
+            num_neighbors += 1
+        if not self.is_empty(x,y+1):
+            num_neighbors += 1
+        if not self.is_empty(x+1, y-1):
+            num_neighbors += 1
+        if not self.is_empty(x+1, y):
+            num_neighbors += 1
+        if not self.is_empty(x+1, y+1):
+            num_neighbors += 1
+        return num_neighbors / 9
+    
     ### MOVEMENT HELPERS ###
     def place_cell(self, cell, x, y):
         '''puts cell at gridspace (x,y) AND adds to live_cells'''
@@ -119,7 +140,9 @@ class Body:
     ### SPACE SELECTION ###
     def is_empty(self, x, y):
         '''returns bool indicating whether space (x,y) is empty'''
-        if self.grid[x][y] == None:
+        if x < 0 or x >= self.width or y < 0 or y >= self.width:
+            return False
+        elif self.grid[x][y] == None:
             return True
         return False
 

@@ -1,10 +1,10 @@
 #
-## Mar. 9
+## Mar. 13
 #
+from density_experiment_utils import tuning_single_cell_experiment
 
-from experiment_utils import tuning_single_cell_experiment
 
-RUNNING = ["high,low"] # flags for which experiment(s) to run
+RUNNING = ["high,none"] # flags for which experiment(s) to run
 
 ## NOTE: rsrc>0.5 to proliferate, hzrd>1 to die. So high,high biases life
 ## IMG-LEGEND
@@ -47,6 +47,12 @@ if "mid,none" in RUNNING:
             GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=10, MOV_RATE=0.2,
             TIME=False, RSRC_AMT=0.5, HZRD_AMT=0.5)
 
+## invulnerable cells, high resources,
+if "high,none" in RUNNING:
+    tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
+            GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=10, MOV_RATE=0.2,
+            TIME=False, RSRC_AMT=1, HZRD_AMT=0.5)
+
 ## middle resources, low hazards
 if "mid,low" in RUNNING:
     tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
@@ -77,7 +83,7 @@ if "high,high" in RUNNING:
             GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=1, MOV_RATE=0.2,
             TIME=False, RSRC_AMT=1, HZRD_AMT=1)
 
-## susceptible cells, high rsrc, very high hazard
+## susceptible cells, high rsrc, veryhigh hazard
 if "high,veryhigh" in RUNNING:
     tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
             GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=1, MOV_RATE=0.2,
@@ -87,12 +93,6 @@ if "high,veryhigh" in RUNNING:
 if "high,low" in RUNNING:
     tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
             GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=1, MOV_RATE=0.2,
-            TIME=False, RSRC_AMT=1, HZRD_AMT=0.3)
-
-## susceptible cells, high rsrc, low hazard
-if "high,none" in RUNNING:
-    tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
-            GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=10, MOV_RATE=0.2,
             TIME=False, RSRC_AMT=1, HZRD_AMT=0.3)
 
 

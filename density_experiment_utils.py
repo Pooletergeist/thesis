@@ -3,8 +3,8 @@
 
 from Body import Body
 from Cell import Cell
-from Hazard import Hazard
-from Resource import Resource
+from Density_Hazard import Hazard
+from Density_Resource import Resource
 from Visualizer import Visualizer
 from Tree import Tree, Node
 
@@ -62,9 +62,9 @@ def tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
     h = Hazard(W, H, HZRD_AMT)
     r = Resource(W, H, RSRC_AMT)
     b = Body(W, H, r, h) # body doesn't know visualizer yet
-    ### give HZRD/RSRC Refs to BODY. Used by density systems
-    #h.body = b
-    #r.body = b
+    ## give HZRD/RSRC Refs to BODY. Used by density systems
+    h.body = b
+    r.body = b
     v = Visualizer(W,H, b)
     c = Cell(mutation_rate = MUT_RATE,
             proliferation_rate = DIV_RATE,

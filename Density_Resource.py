@@ -2,13 +2,10 @@
 #
 ## Mar. 13
 #
-#
+# supports updating based on getting density from body.
 
 import random as rand
 import numpy
-
-## Floats over range 0-1
-AMOUNT_RANGE = (0,1) # unused
 
 ## munificence scales laplace. expect float 0->1
 
@@ -21,23 +18,13 @@ class Resource:
         self.width = width
         self.height = height
         self.munificence = munificence
-        self.body=body #unused. only here for rsrc module calling consistency 
+        self.body = body
     
-    def create_resources(self):
-        '''draws hazard from positive laplace for each grid position'''
-        for x in range(self.width):
-            for y in range(self.height):
-                amount = abs(numpy.random.laplace(loc=0.0, 
-                                scale = self.munificence))
-                self.grid[x][y] = amount
-
-    def distribute_few_resources(self, amount, n):
-        '''Gives resources specified by "amount" to "n" random grid positions'''
-        for i in range(n):
-            x = rand.randint(0, self.width-1)
-            y = rand.randint(0, self.height-1)
-            #print(x,y)
-            self.grid[x][y] += amount
+    def update_resource_at(self, x,y, cell_density=0):
+        '''sets resource at (x,y) equal to draw from positive laplace'''
+        amount = abs(numpy.random.laplace(loc=0.0, 
+                            scale = self.munificence * (1-cell_density)))
+        self.grid[x][y] = amount
 
     def deplete_resources(self, amount, x, y):
         '''Removes resources specified by "amount" from space on grid (x,y)'''
@@ -50,7 +37,17 @@ class Resource:
         return self.grid[x][y]
 
     def update(self):
-        self.create_resources()
+        '''updates resource at every position from laplace scaled by 1/'''
+        for x in range(self.width):
+            for y in range(self.height):
+                try:
+                    cell_density = self.body.get_density_at(x,y) 
+                except:
+                    raise ReferenceError( 
+        "self.body.get_density_at(x,y) failed to return a cell density. \n"+ 
+        "Did you make sure to init Resource with a pointer to your body object?"
+                    )
+                self.update_resource_at(x, y, cell_density)
 
     def __repr__(self):
         string = ""
