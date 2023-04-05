@@ -12,7 +12,7 @@ import numpy # for laplace
 
 class Hazard:
 
-    def __init__(self, width, height, peril=0.5, body=None):
+    def __init__(self, width, height, peril=0.5, body=None, density_radius=1):
         # initializes width-many lists of length height: 
         self.grid = [[0]*height for n in range(width)]
         # grid[i][j], i is width, j is height
@@ -20,6 +20,7 @@ class Hazard:
         self.height = height
         self.peril = peril
         self.body = body
+        self.density_radius = density_radius
 
     def update_hazard_at(self, x, y, cell_density):
         '''draws hazard from positive laplace for each grid position'''
@@ -39,7 +40,8 @@ class Hazard:
         for x in range(self.width):
             for y in range(self.height):
                 try:
-                    cell_density = self.body.get_density_at(x,y)
+                    cell_density = self.body.get_density_at(x,y,
+                                                            self.density_radius)
                 except:
                     raise ReferenceError(
         "self.body.get_density_at(x,y) failed to return a cell density. \n"+

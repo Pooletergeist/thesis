@@ -1,10 +1,10 @@
 #
-## Mar 13
+## Mar 18
 
 from Body import Body
 from Cell import Cell
-from Density_Hazard import Hazard
-from Density_Resource import Resource
+from Stateful_Hazard import Hazard
+from Stateful_Resource import Resource
 from Visualizer import Visualizer
 from Tree import Tree, Node
 
@@ -54,15 +54,15 @@ def single_cell_experiment(W=1000, H=1000, INIT_X=500, INIT_Y=500,
 
 def tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25, 
         GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=10, MOV_RATE=0.2,
-        TIME=False, RSRC_AMT=0.5, HZRD_AMT=0.5, DENSITY_RADIUS=1, verbose=True):
+        TIME=False, RSRC_AMT=0.5, HZRD_AMT=0.5, verbose=False):
     # SEED RNG
     rand.seed(123)
     np.random.seed(123)
     # SETUP OBJECTS
-    h = Hazard(W, H, HZRD_AMT, density_radius = DENSITY_RADIUS)
-    r = Resource(W, H, RSRC_AMT, density_radius = DENSITY_RADIUS)
+    h = Hazard(W, H, HZRD_AMT) 
+    r = Resource(W, H, RSRC_AMT)
     b = Body(W, H, r, h) # body doesn't know visualizer yet
-    ## give HZRD/RSRC Refs to BODY. Used by density systems
+    ## give HZRD/RSRC Refs to BODY. Used by RSRC to get cell consumption
     h.body = b
     r.body = b
     v = Visualizer(W,H, b)
@@ -77,8 +77,6 @@ def tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
     c_node = Node(parent = None, born_location = (INIT_X, INIT_Y), cell = c)
     c.set_tree_node(c_node)
 
-    #v.display("resources: ", mode = "Resource")
-    #v.display("hazards: ", mode = "Hazard")
     #v.display("cells: ", mode = "Cell")
 
     if TIME:
@@ -91,20 +89,20 @@ def tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
         b.update()
         if i == GENERATIONS//2 and not TIME:
             if verbose:
-                v.display("resources after " + str(i) +
-                    " generations: ", mode = "Resource")
+                v.display("resources: ", mode = "Resource")
                 print(r)
-            v.display("cells after " + str(i) + " generations")
+                v.display("hazards: ", mode = "Hazard")
+                print(h)
+            v.display("after " + str(i) + " generations")
 
     if TIME:
         end = time.time()
         print("Sim Time: ", end-start)
 
     if verbose:
-        v.display("resources after " + str(GENERATIONS) + "generations",
-                mode = "Resource")
-        print(r)
-    v.display("cells after " + str(GENERATIONS) + " generations")
+        v.display("resources: ", mode = "Resource")
+        v.display("hazards: ", mode = "Hazard")
+    v.display("after " + str(GENERATIONS) + " generations")
     if TIME:
         vend = time.time()
         print("Display Time: ", vend-end)

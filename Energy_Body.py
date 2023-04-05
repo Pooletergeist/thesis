@@ -1,13 +1,15 @@
 #
 #
-## Mar. 30 dead cells still in self.live_cells?
+## Mar. 18
 #
+## differs in that body doesn't call deplete resource after proliferation
+## instead, cells track that inside their energy budget.
+## resource depletion happens when cells eat to increase their energy budget
 #
 import random as rand
 from Visualizer import Visualizer
 
-MAX_ENERGY = 0.8 # 5 # used in visualizing resources (and in energy sim) 5 for nrg
-PROLIFERATIVE_COST = 0.5 # used to deplete resources
+MAX_ENERGY = 5 # used by energy sim
     
 class Body:
 
@@ -84,16 +86,9 @@ class Body:
                                 daughter_tuple[1][1])
                 if verbose:
                     print("placed daughter. Alive: " + str(self.live_cells))
-                # consume resources 
-                self.resource_model.deplete_resources(PROLIFERATIVE_COST,
-                                                        x,
-                                                        y)
             if dead != False:
                 self.remove_cell(x,y) # remove from grid
                 self.live_cells.remove(cell) # remove from live_cells list
-                # NOTE: interesting empty center result with density if not
-                # removing dead cells from updating: they can still reproduce.
-                # but disappear visually... 
                         
 
     ### DENSITY HELPER ###
@@ -121,6 +116,12 @@ class Body:
             return self.grid[x][y].hazard_resistance
         return 0
 
+    ## for energy simulation 
+    def get_energy_ate_at(self, x, y):
+        if self.grid[x][y] is not None:
+            return MAX_ENERGY - self.grid[x][y].energy_budget
+        return 0
+            
     ### MOVEMENT HELPERS ###
     def place_cell(self, cell, x, y):
         '''puts cell at gridspace (x,y) AND adds to live_cells'''

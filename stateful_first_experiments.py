@@ -1,17 +1,13 @@
 #
-## Mar. 14
+## Mar. 18
 #
-from density_experiment_utils import tuning_single_cell_experiment
 
-### NOTE: comparing with the null model, where draws are laplace scaled by X,
-### these do draws scaled by X(1-density). So an un-neighbored cell
-### will have the same resources as in the null model, and a half-neighbored
-### cell will have half.
-#### => Spatial distributions look pretty close to null model with half 
-#### parameters for munificence and peril.
+### RESULTS: hazards wind up high, things grow slow if at all, spaced out.
 
 
-RUNNING = ["high,low"] # flags for which experiment(s) to run
+from stateful_experiment_utils import tuning_single_cell_experiment
+
+RUNNING = ["high,mid"] # flags for which experiment(s) to run
 
 ## NOTE: rsrc>0.5 to proliferate, hzrd>1 to die. So high,high biases life
 ## IMG-LEGEND
@@ -66,19 +62,19 @@ if "mid,low" in RUNNING:
             GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=1, MOV_RATE=0.2,
             TIME=False, RSRC_AMT=0.5, HZRD_AMT=0.3)
 
-## susceptible cells, middle rsrc&hazard - dies
+## susceptible cells, middle rsrc&hazard
 if "mid,mid" in RUNNING:
     tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
             GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=1, MOV_RATE=0.2,
-            TIME=False, RSRC_AMT=0.5, HZRD_AMT=0.5)
+            TIME=False, RSRC_AMT=0.5, HZRD_AMT=0.5, verbose=True)
 
-## susceptible cells, middle rsrc&hazard - dies
+## susceptible cells, middle rsrc&hazard
 if "mid,high" in RUNNING:
     tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
             GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=1, MOV_RATE=0.2,
             TIME=False, RSRC_AMT=0.5, HZRD_AMT=1)
 
-## susceptible cells, high rsrc, mid hazard - dies
+## susceptible cells, high rsrc, mid hazard
 if "high,mid" in RUNNING:
     tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
             GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=1, MOV_RATE=0.2,
@@ -102,13 +98,13 @@ if "high,low" in RUNNING:
             GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=1, MOV_RATE=0.2,
             TIME=False, RSRC_AMT=1, HZRD_AMT=0.3)
 
-## susceptible cells, high rsrc, low hazard - everything dies
+## susceptible cells, high rsrc, low hazard
 if "2high,2low" in RUNNING:
     tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
             GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=1, MOV_RATE=0.2,
             TIME=False, RSRC_AMT=2, HZRD_AMT=0.6)
 
-## susceptible cells, high rsrc, low hazard - makes blob
+## susceptible cells, high rsrc, low hazard
 if "high,low,2" in RUNNING:
     tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
             GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=1, MOV_RATE=0.2,

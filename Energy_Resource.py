@@ -3,10 +3,6 @@
 ## Mar. 18
 #
 #
-#### V1
-# TODO: grid prior and grid post? 
-# INTERFACE: communicate cell's cost to resource
-#
 #### V2 - ENERGY BUDGET
 # INTERFACE: Cells pickup what they can up to some budget, burn on prolif..
 # when resources update, communicate cell's cost to square
@@ -19,7 +15,7 @@ import numpy
 
 class Resource:
     
-    def __init__(self, width, height, munificence=0.5, body=None):
+    def __init__(self, width, height, munificence=0.05, body=None):
         # initializes width-many lists of length height: 
         self.grid = [[0]*height for n in range(width)] 
         # grid[i][j], i is width, j is height
@@ -28,6 +24,13 @@ class Resource:
         self.munificence = munificence
         self.body = body
 
+    def bestow_resources(self, largess):
+        '''initializes rsrc at each grid position from pos laplace'''
+        for x in range(self.width):
+            for y in range(self.height):
+                self.grid[x][y] = numpy.random.laplace(loc=0.0, 
+                                    scale = self.munificence*largess)
+
     def update_resource_at(self, x, y):
         '''adds resource at (x,y) equal to draw from laplace (possibly <0)'''
         amount = numpy.random.laplace(loc=0.0,
@@ -35,8 +38,8 @@ class Resource:
         new_resource = self.grid[x][y] + amount
         if new_resource < 0: # make sure no negatives
             new_resource = 0
-        elif new_resource > 2.5: # max at 5 divisions?
-            new_resource = 2.5
+        elif new_resource > 10: # max at 5 divisions?
+            new_resource = 10 
         self.grid[x][y] = new_resource
 
     def deplete_resource_at(self, x, y, amount):
@@ -54,7 +57,7 @@ class Resource:
         # and deposit a new energy amount?
         for x in range(self.width):
             for y in range(self.height):
-                cell_ate = self.body.get_consumption_at(x,y)
+                cell_ate = self.body.get_energy_ate_at(x,y)
                 self.deplete_resource_at(x,y, cell_ate)
                 self.update_resource_at(x,y)
 

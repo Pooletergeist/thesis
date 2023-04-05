@@ -92,6 +92,15 @@ class Node:
             # add self
             string += str(self)
             return string
+
+    def check_living_children(self):
+        '''helpful for debug'''
+        if self.cell_reference != None:
+            # we've got a cell on grid.
+            return self.cell_reference.is_alive()
+        else: 
+            # we've got a parent.
+            return (self.children[0].check_living_children() or self.children[1].check_living_children())
             
     def __repr__(self): 
         return str(self.visited_locations)

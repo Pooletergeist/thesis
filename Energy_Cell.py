@@ -1,20 +1,14 @@
 #
 #
-## Mar. 18: give cells consumption field
+## Mar. 18: give cells budget
 #
 #
 
-## should cells be passed 'proliferation cost' in init or know as constant?
-## does grid compute hazard death chance? or does the cell?
-
-## should cells check if they have enough resources, or sometimes divide into
-## death?
-
-## TODO: report resource cost?
 import random as rand
 
-PROLIFERATION_COST = 0.5
-BASE_CONSUMPTION = 0.5
+MAX_ENERGY = 5 # make sure this is consistent with Body's number!!
+BASE_CONSUMPTION = 0.1
+PROLIFERATION_COST = BASE_CONSUMPTION * 10
 
 class Cell:
     '''basic cell class, able to move grow and die'''
@@ -26,7 +20,8 @@ class Cell:
                     x, 
                     y, 
                     t=None,
-                    vb=False):
+                    energy = PROLIFERATION_COST):
+        self.energy_budget = energy 
         self.mutation_rate = mutation_rate
         self.proliferation_rate = proliferation_rate
         self.hazard_resistance = hazard_resistance
@@ -36,43 +31,49 @@ class Cell:
         self.tree_node = t
         self.dead = False
         self.color = (0,0,0) # default cells to black rgb
-        self.consumption = BASE_CONSUMPTION
-        self.verbose_updates = vb
 
     def update(self, space, resources, hazards, verbose=False):
         destination = None # would samelocation be fewer checks?
         daughter = None
         daughter_location = None
-        self.consumption = BASE_CONSUMPTION # reset in-case of prev. division
-        # Mutate?
-        if hazards > self.hazard_resistance:
+        # TODO: Mutate?
+        if hazards > self.hazard_resistance or self.energy_budget < 0:
+            print("DEAD:")
+            print("energy: ", self.energy_budget)
+            print("hazards: ", hazards)
             if verbose:
-                print("ded")
+                print(self.energy_budget, 'dead')
             # Die
             self.dead = True
             if self.tree_node != None:
                 self.tree_node.track_death((self.x,self.y))
-        elif space != []:
-            # Move - QUESTION: leave grid to update my position?
-            move_chance = rand.random()
-            if verbose:
-                print("move chance", move_chance)
-            if move_chance < self.motility_rate:
-                rand.shuffle(space)
+        else:
+            # pickup energy from space
+            vacuum = MAX_ENERGY - self.energy_budget
+            self.energy_budget += min(vacuum, resources)
+            # pay cost of living
+            self.energy_budget -= BASE_CONSUMPTION
+            if space != []:
+                # Move - leave grid to update my position?
+                move_chance = rand.random()
                 if verbose:
-                    print("moving")
-                    print(space)
-                destination = space.pop()
-                if verbose:
-                    print("move to: ", destination) 
-                space.append((self.x,self.y)) 
-                if self.tree_node != None:
-                    self.tree_node.track_move(destination)
-            # Divide
-            if resources > PROLIFERATION_COST:
+                    print("move chance", move_chance)
+                if move_chance < self.motility_rate:
+                    rand.shuffle(space)
+                    if verbose:
+                        print("moving")
+                        print(space)
+                    destination = space.pop()
+                    if verbose:
+                        print("move to: ", destination) 
+                    space.append((self.x,self.y)) 
+                    if self.tree_node != None:
+                        self.tree_node.track_move(destination)
+                # Divide
                 if rand.random() < self.proliferation_rate:
                     # consume resources to divide
-                    self.consumption += PROLIFERATION_COST
+                    self.energy_budget -= PROLIFERATION_COST
+                    self.energy_budget /= 2 # half for daughter
                     # proliferate
                     rand.shuffle(space)
                     daughter_location = space.pop()
@@ -82,7 +83,8 @@ class Cell:
                                 hazard_resistance = self.hazard_resistance,
                                 motility_rate = self.motility_rate,
                                 x = daughter_location[0],
-                                y = daughter_location[1]
+                                y = daughter_location[1],
+                                energy = self.energy_budget
                                 )
                     if self.tree_node != None:
                         # clear the former tree-node's reference to this cell.
@@ -95,8 +97,6 @@ class Cell:
                         # give the tree nodes refs to cells
                         self.tree_node.set_cell_reference(self)
                         daughter.tree_node.set_cell_reference(daughter)
-        if self.verbose_updates:
-            print(destination, (daughter==None, daughter_location), self.dead)
         return (destination, (daughter, daughter_location), self.dead)
 
     def set_location(self, x,y):
@@ -111,9 +111,6 @@ class Cell:
 
     def set_color(self, color):
         self.color = color
-
-    def is_alive(self):
-        return not self.dead
 
     def __repr__(self):
         string = "mutation rate: " + str(self.mutation_rate) + "\n"
