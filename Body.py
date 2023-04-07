@@ -1,6 +1,6 @@
 #
 #
-## Mar. 30 dead cells still in self.live_cells?
+## Apr 6.
 #
 #
 import random as rand

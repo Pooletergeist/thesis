@@ -60,6 +60,27 @@ class Node:
             for child in self.children:
                 child.color_subtree(color_rgb)
 
+    def count_subtree(self):
+        if self.children == []:
+            return 1
+        else:
+            # since only 2 children,
+            return (1 + self.children[0].count_subtree() + 
+                    self.children[1].count_subtree())
+
+    def count_living_subtree(self):
+        # is this cell living?
+        if self.cell_reference != None and not self.cell_reference.dead:
+            count_me_living = 1
+        else:
+            count_me_living = 0
+        # then, how big is the subtree?
+        if self.children == []:
+            return count_me_living
+        else:
+            return (count_me_living + self.children[0].count_living_subtree() + 
+                    self.children[1].count_living_subtree())
+
     ## display ##
     ## pretty print: vertical 
     # take the root, check all your children on same line, 

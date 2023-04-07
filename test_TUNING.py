@@ -75,3 +75,5 @@ noprintEtime = time.time()
 print("look for new file called: " + fname)
 print("no console prints took", noprintEtime-noprintStime)
 print("console prints took", printEtime-printStime)
+# first timing took 140-seconds for both
+print("both files should have the same contents!")

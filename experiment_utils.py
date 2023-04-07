@@ -116,7 +116,7 @@ def tuning_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
 
 def running_single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25, 
         GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=10, MOV_RATE=0.2,
-        RSRC_AMT=0.5, HZRD_AMT=0.5):
+        RSRC_AMT=0.5, HZRD_AMT=0.5, VISUALIZE=None):
         # nice TODO: add debug for this
     # SEED RNG
     rand.seed(123)
@@ -339,7 +339,7 @@ def generic_multi_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
 
     originators = []
     ## supposing we want grid to take up 1/5 of width,
-    boundary = round(sqrt(N_CELLS))
+    boundary = round(sqrt(len(CELL_LIST)))
     gap = round((1/5) * (W/boundary))
     x = INIT_X
     y = INIT_Y
@@ -413,6 +413,6 @@ def generic_multi_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25,
             color_subtrees(originators, debug)
             v.display("first cells' subtrees colored")
 
-    return b # for stats & analysis
+    return b, originators # for stats & analysis
 
 
