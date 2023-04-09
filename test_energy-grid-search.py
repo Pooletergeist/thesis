@@ -23,7 +23,7 @@
 
 import time
 
-from energy_tuning import *
+from energy_sim_tuning import *
 from Visualizer import Visualizer # for test
 from UTILS import *
 print(CELL_LIST)
