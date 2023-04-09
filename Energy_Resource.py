@@ -50,6 +50,7 @@ class Resource:
         '''Reports resource amount at cell (x,y)'''
         #print("x: ", x)
         #print("y: ", y)
+        #print(self.grid[x][y])
         return self.grid[x][y]
 
     def update(self):

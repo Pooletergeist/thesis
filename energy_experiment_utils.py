@@ -1,5 +1,5 @@
 #
-## Mar 18
+## Apr. 6: run single-cell-experiment with tuning...
 #
 ## how do cells behave if they have an energy budget?
 ## acquiring resource
@@ -16,17 +16,68 @@ import numpy as np
 import time
 from math import sqrt
 
+
+def energy_model(W=50, H=50, RSRC_AMT=0.5, HZRD_AMT=0.2, INIT_RSRC_FCTR=None):
+    '''returns body object with modules initialized'''
+    r = Resource(W, H, RSRC_AMT)
+    if INIT_RSRC_FCTR != None:
+        r.bestow_resources(INIT_RSRC_FCTR)
+    h = Hazard(W, H, HZRD_AMT)
+    b = Body(W, H, r, h) 
+    ## give RSRC Refs to BODY. Used by RSRC to get cell consumption
+    r.body = b
+    h.body = b
+    return b
+
+def make_untracked_energy_cells(N=1,
+            MUT_RATE=0.0,
+            DIV_RATE=0.1,
+            HAZ_RES=1,
+            MOV_RATE=0.2,
+            NAME=""):
+    ''''returns a list of cells with given paramaters, and tree nodes'''
+    cells = []
+    nodes = []
+    ids = []
+    for i in range(N):
+        c = Cell(
+                mutation_rate = MUT_RATE,
+                proliferation_rate = DIV_RATE,
+                hazard_resistance = HAZ_RES,
+                motility_rate = MOV_RATE
+                )
+        n = Node(parent = None, born_location = (None, None), cell = None)
+        cell_id = (NAME, DIV_RATE, MUT_RATE)
+
+        cells.append(c)
+        ids.append(cell_id)
+        nodes.append(n)
+
+    return cells, ids, nodes
+
+def connect_cells_and_roots(cell_list, node_list):
+    '''in-place connects cells with tree positionally: exchanging references'''
+    assert(len(cell_list) == len(node_list))
+    for i in range(len(cell_list)):
+        # give cell a reference to its tree node
+        cell_list[i].set_tree_node(node_list[i])
+        # give tree node a reference to its cell
+        node_list[i].set_cell_reference(cell_list[i])
+        
+
 def single_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25, 
-        GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=100, MOV_RATE=0.2,
-        TIME=False, RSRC_AMT=0.3, HZRD_AMT=0.5, verbose=True, INIT_RSRC_FCTR=100, SEED=124):
+        GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=1, MOV_RATE=0.2,
+        TIME=False, RSRC_AMT=0.5, HZRD_AMT=0.2, verbose=True, INIT_RSRC_FCTR=100, SEED=124):
     # SEED RNG
     rand.seed(SEED)
     np.random.seed(SEED)
+
     # SETUP OBJECTS
     r = Resource(W, H, RSRC_AMT)
     r.bestow_resources(INIT_RSRC_FCTR)
     h = Hazard(W, H, HZRD_AMT)
     b = Body(W, H, r, h) 
+
     ## give RSRC Refs to BODY. Used by RSRC to get cell consumption
     r.body = b
     h.body = b
