@@ -29,6 +29,17 @@ class Node:
         # dangerous pointer to cell
         self.cell_reference = cell
 
+    def __eq__(self, other):
+        '''two nodes are equal if all their fields are equal'''
+        if isinstance(other, Node):
+            return (self.parent == other.parent 
+                    and self.born_location == other.born_location 
+                    and self.dead_location == other.dead_location 
+                    and self.visited_locations == other.visited_locations 
+                    and self.children == other.children 
+                    and self.cell_reference == other.cell_reference) 
+        return False
+
     ### When things happen on the Grid: ###
     def track_division(self, my_location, child_location):
         '''make 2 nodes corresponding to the daughters of this division'''
@@ -50,6 +61,10 @@ class Node:
     def set_cell_reference(self, cell):
         self.cell_reference = cell
 
+    def set_born_location(self, location):
+        self.born_location = location
+        self.visited_locations[0] = location
+
     def add_child(self, cell): # only used in test rn
         self.children.append(cell)
 
@@ -66,7 +81,8 @@ class Node:
         else:
             # since only 2 children,
             return (1 + self.children[0].count_subtree() + 
-                    self.children[1].count_subtree())
+                    self.children[1].count_subtree() - 1) # -1 since parent cell
+            # disappears (becomes a daughter)
 
     def count_living_subtree(self):
         # is this cell living?

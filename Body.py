@@ -22,7 +22,6 @@ class Body:
         # should these be objects?
         self.resource_model = resource
         self.hazard_model = hazard
-        self.visualizer = vis # UNUSED
 
     ### UPDATE ####
     def update(self, visualize=False, verbose=False, hint=True):

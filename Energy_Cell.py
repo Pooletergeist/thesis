@@ -17,8 +17,8 @@ class Cell:
                     proliferation_rate, 
                     hazard_resistance, 
                     motility_rate, 
-                    x, 
-                    y, 
+                    x=None, 
+                    y=None, 
                     t=None,
                     energy = PROLIFERATION_COST):
         self.energy_budget = energy 
@@ -32,15 +32,31 @@ class Cell:
         self.dead = False
         self.color = (0,0,0) # default cells to black rgb
 
+    def __deepcopy__(self, memo):
+        '''fresh cell object with same fields, except tree_node=None'''
+        new = Cell(self.mutation_rate,
+                self.proliferation_rate,
+                self.hazard_resistance,
+                self.motility_rate,
+                self.x,
+                self.y,
+                None, 
+                self.energy_budget)
+        self.dead = self.dead
+        self.color = self.color
+        return new
+        
+
     def update(self, space, resources, hazards, verbose=False):
         destination = None # would samelocation be fewer checks?
         daughter = None
         daughter_location = None
         # TODO: Mutate?
         if hazards > self.hazard_resistance or self.energy_budget < 0:
-            print("DEAD:")
-            print("energy: ", self.energy_budget)
-            print("hazards: ", hazards)
+            if verbose:
+                print("DEAD:")
+                print("energy: ", self.energy_budget)
+                print("hazards: ", hazards)
             if verbose:
                 print(self.energy_budget, 'dead')
             # Die
@@ -71,6 +87,8 @@ class Cell:
                         self.tree_node.track_move(destination)
                 # Divide
                 if rand.random() < self.proliferation_rate:
+                    if verbose: 
+                        print("Dividing")
                     # consume resources to divide
                     self.energy_budget -= PROLIFERATION_COST
                     self.energy_budget /= 2 # half for daughter
@@ -113,13 +131,15 @@ class Cell:
         self.color = color
 
     def __repr__(self):
-        string = "mutation rate: " + str(self.mutation_rate) + "\n"
+        delim = "======="
+        string = delim + "\nmutation rate: " + str(self.mutation_rate) + "\n"
         string += "proliferation_rate: " + str(self.proliferation_rate) + "\n"
         string += "hazard_resistance: " + str(self.hazard_resistance) + "\n"
         string += "motility_rate: " + str(self.motility_rate) + "\n"
         string += "x: " + str(self.x) + "\n"
         string += "y: " + str(self.y) + "\n"
         string += "dead: " + str(self.dead) + "\n"
+        string += delim
         return string
 
 

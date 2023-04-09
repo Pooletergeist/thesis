@@ -23,8 +23,8 @@ class Cell:
                     proliferation_rate, 
                     hazard_resistance, 
                     motility_rate, 
-                    x, 
-                    y, 
+                    x=None, 
+                    y=None, 
                     t=None,
                     vb=False):
         self.mutation_rate = mutation_rate

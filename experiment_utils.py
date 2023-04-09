@@ -247,6 +247,15 @@ def uncolor_subtrees(cells):
     '''turns cells and descendants black'''
     for cell in cells:
         cell.color_subtree(0,0,0)
+
+def count_living_subtrees(cell_node_list):
+    '''given a list of cell nodes, return list of counts of still-live cells'''
+    counts = [0] * len(cell_node_list)
+    i = 0
+    for cell_node in cell_node_list:
+        counts[i] = cell_node.count_living_subtree()
+        i += 1 
+    return counts
         
 def tuning_multi_cell_experiment(W=50, H=50, INIT_X=25, INIT_Y=25, 
         GENERATIONS=200, MUT_RATE=0, DIV_RATE=0.1, HAZ_RES=10, MOV_RATE=0.2,

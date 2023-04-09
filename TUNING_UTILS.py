@@ -1,12 +1,7 @@
 #
-## Apr. 4 TEST ME!!!
+## Apr. 6 tested!
 #
-
-# search for equilibria?
-## after some number of generations, get cells filling some proportion of 
-## screen?
-
-## for some number of seeds?
+# grid search
 
 def count_cells(matrix):
     n_cells = 0
@@ -219,7 +214,7 @@ def multicell_grid_search(
     # and that your sim function connects cells to tree nodes properly
     nInitCells = len(CELL_LIST)
     output_filename = (TITLE_PREFIX + "rRange=" +  str(RSRC_RANGE) +
-                "_hRange=" + str(HZRD_RANGE) + "_nInitCell=" + str() +
+                "_hRange=" + str(HZRD_RANGE) + "_nInitCell=" + str(nInitCells) +
                 "_hInc=" + str(H_INCREMENT) + "_rInc" + str(R_INCREMENT) + 
                 "_w=" + str(W) + "_h=" + str(H) + "_divRt=" + str(DIV_RATE) + 
                 "_movRt" + str(MOV_RATE) + ".csv")
