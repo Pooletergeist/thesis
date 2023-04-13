@@ -1,5 +1,5 @@
 #
-## Feb 7.
+## Apr. 12: meanDivRate
 #
 
 # WANT: Cells report to Tree, tracks every division, location etc.
@@ -96,6 +96,43 @@ class Node:
         else:
             return (count_me_living + self.children[0].count_living_subtree() + 
                     self.children[1].count_living_subtree())
+
+#######
+# Mutation Stats 
+#######
+
+    def sum_subtree_div_rate(self):
+        # is this cell living?
+        if self.cell_reference != None and not self.cell_reference.dead:
+            div_rate = self.div_rate
+        else:
+            div_rate = 0 # don't count if you're dead
+        # then, how big is the subtree?
+        if self.children == []:
+            return div_rate
+        else:
+            return (div_rate + self.children[0].sum_subtree_div_rate() + 
+                    self.children[1].sum_subtree_div_rate())
+
+    def mean_subtree_div_rate(self, n_liveCells):
+        return self.sum_subtree_div_rate() / n_liveCells
+        
+    def sum_variation_subtree_div_rate(self, mean):
+        # calculate squared sum of differences with mean
+        if self.cell_reference != None and not self.cell_reference.dead:
+            diff = (self.div_rate - mean) ** 2
+        else:
+            diff = 0 # don't count if you're dead
+        # then, how big is the subtree?
+        if self.children == []:
+            return diff 
+        else:
+            return (diff + self.children[0].sum_variance_subtree_div_rate() + 
+                    self.children[1].sum_variance_subtree_div_rate())
+
+    def subtree_div_rate_variance(self, n_liveCells):
+        return self.sum_variance_subtree_div_rate() / n_liveCells
+ 
 
     ## display ##
     ## pretty print: vertical 

@@ -47,7 +47,7 @@ def make_untracked_energy_cells(N=1,
                 motility_rate = MOV_RATE
                 )
         n = Node(parent = None, born_location = (None, None), cell = None)
-        cell_id = (NAME, DIV_RATE, MOV_RATE)
+        cell_id = (NAME, DIV_RATE, MOV_RATE, MUT_RATE)
 
         cells.append(c)
         ids.append(cell_id)

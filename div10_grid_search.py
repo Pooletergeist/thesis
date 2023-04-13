@@ -1,12 +1,12 @@
 #
-## Apr. 8
+## Apr. 12
 #
 
 from energy_sim_tuning import seeded_grid_search
 
 # constants
 base_seed = 123
-n_seeds = 2
+n_seeds = 20
 rsrc_range = (0.5, 1.5) 
 r_increment = 0.1
 hzrd_range = (0.0, 0.4)
@@ -14,15 +14,13 @@ h_increment = 0.05
 
 simulation_width = 50
 simulation_height = 50
-generations = 20
+generations = 200
 snapshots_per_sim = 2
-title_prefix = ""
+title_prefix = "div10_"
 directory = 'static-results/world-of-their-own'
 
 # setup cells
 from energy_experiment_utils import make_untracked_energy_cells
-cell_division_rate = 0.1
-cell_move_rate = 0.2
 
 cell_list, clone_id_list, node_list = make_untracked_energy_cells(N=4,
                                                             MUT_RATE = 0.0,
