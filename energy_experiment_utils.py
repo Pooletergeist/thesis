@@ -1,13 +1,12 @@
 #
-## Apr. 6: run single-cell-experiment with tuning...
+## Apr. 12: 
 #
-## how do cells behave if they have an energy budget?
-## acquiring resource
 
 from Energy_Body import Body
 from Energy_Cell import Cell
-from Hazard import Hazard
 from Energy_Resource import Resource
+
+from Hazard import Hazard
 from Visualizer import Visualizer
 from Tree import Tree, Node
 
@@ -17,9 +16,10 @@ import time
 from math import sqrt
 
 
-def energy_model(W=50, H=50, RSRC_AMT=0.5, HZRD_AMT=0.2, INIT_RSRC_FCTR=None):
+def energy_model(W=50, H=50, RSRC_AMT=0.5, HZRD_AMT=0.2, IV=0, 
+    INIT_RSRC_FCTR=None):
     '''returns body object with modules initialized'''
-    r = Resource(W, H, RSRC_AMT)
+    r = Resource(width=W, height=H, munificence=RSRC_AMT, start=IV)
     if INIT_RSRC_FCTR != None:
         r.bestow_resources(INIT_RSRC_FCTR)
     h = Hazard(W, H, HZRD_AMT)
@@ -47,7 +47,7 @@ def make_untracked_energy_cells(N=1,
                 motility_rate = MOV_RATE
                 )
         n = Node(parent = None, born_location = (None, None), cell = None)
-        cell_id = (NAME, DIV_RATE, MUT_RATE)
+        cell_id = (NAME, DIV_RATE, MOV_RATE)
 
         cells.append(c)
         ids.append(cell_id)

@@ -5,11 +5,15 @@ for Reed backups and code
 
 TODO: 
 
-1) tie together modules in simulation.
-2) Build Tree
-3) test Tree 
+1. Heatmaps for energy\_sim\_tuning 1 phenotype
+2. Heatmaps for energy\_sim\_tuning pairwise phenotypes
+    1. Colored Grids for interesting outputs
+
+Then,
+Mutation!
 
 ===
+
 cells talk to tree.
 grid mediates cells, resources, and hazards.
 

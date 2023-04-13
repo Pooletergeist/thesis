@@ -1,6 +1,6 @@
 #
 #
-## Mar. 18
+## Apr 12.
 #
 #
 #### V2 - ENERGY BUDGET
@@ -10,37 +10,39 @@
 import random as rand
 import numpy
 
-## Floats over range 0-1
-## munificence scales laplace. expect float 0->1
+## munificence scales normal, centred on 10. 
+RESOURCE_EXPECTATION = 10
 
 class Resource:
     
-    def __init__(self, width, height, munificence=0.05, body=None):
+    def __init__(self, width, height, munificence=0.05, start=0, body=None):
         # initializes width-many lists of length height: 
-        self.grid = [[0]*height for n in range(width)] 
+        self.grid = [[start]*height for n in range(width)] 
         # grid[i][j], i is width, j is height
         self.width = width
         self.height = height
         self.munificence = munificence
         self.body = body
+        #self.debug = 0
+        #self.avgamt = 0
+        #self.updated = 0
 
     def bestow_resources(self, largess):
         '''initializes rsrc at each grid position from pos laplace'''
         for x in range(self.width):
             for y in range(self.height):
-                self.grid[x][y] = numpy.random.laplace(loc=0.0, 
+                self.grid[x][y] = numpy.random.normal(loc=RESOURCE_EXPECTATION, 
                                     scale = self.munificence*largess)
 
     def update_resource_at(self, x, y):
         '''adds resource at (x,y) equal to draw from laplace (possibly <0)'''
-        amount = numpy.random.laplace(loc=0.0,
+        #print(self.munificence, "here")
+        amount = numpy.random.laplace(loc=RESOURCE_EXPECTATION,
                                 scale = self.munificence)
         new_resource = self.grid[x][y] + amount
-        if new_resource < 0: # make sure no negatives
-            new_resource = 0
-        elif new_resource > 10: # max at 5 divisions?
-            new_resource = 10 
+        #self.avgamt += amount
         self.grid[x][y] = new_resource
+        #self.updated+=1
 
     def deplete_resource_at(self, x, y, amount):
         '''Removes resources specified by "amount" from space on grid (x,y)'''
@@ -56,11 +58,27 @@ class Resource:
     def update(self):
         # for each cell, get its energy consumption 
         # and deposit a new energy amount?
+#        print(self.get_resource_amount(0,0), " at 0,0")
+        #total = 0
+        #delta_total = 0
         for x in range(self.width):
             for y in range(self.height):
+        #        total += self.get_resource_amount(x,y)
                 cell_ate = self.body.get_energy_ate_at(x,y)
                 self.deplete_resource_at(x,y, cell_ate)
+        #        pre = self.get_resource_amount(x,y)
                 self.update_resource_at(x,y)
+        #        post = self.get_resource_amount(x,y)
+        #        delta = post-pre
+        #        delta_total += delta
+        #self.debug += delta_total
+        #print("---")
+        #print(self)
+        #print("---")
+        #print(self.debug)
+        #print(self.avgamt/self.updated, "avg-amt")
+        #print("total on grid=", total)
+        #print("delta total=", delta_total)
 
     def __repr__(self):
         string = ""

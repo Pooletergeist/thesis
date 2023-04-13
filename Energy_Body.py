@@ -1,15 +1,12 @@
 #
 #
-## Mar. 18
+## Apr. 12
 #
-## differs in that body doesn't call deplete resource after proliferation
-## instead, cells track that inside their energy budget.
-## resource depletion happens when cells eat to increase their energy budget
-#
+
 import random as rand
 from Visualizer import Visualizer
 
-MAX_ENERGY = 5 # used by energy sim
+MAX_ENERGY = 200# make sure this is consistent with Cell's number!!
     
 class Body:
 

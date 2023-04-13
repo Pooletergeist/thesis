@@ -1,13 +1,13 @@
 #
 #
-## Mar. 18: give cells budget
+## Apr. 12: Cells can hold 
 #
 #
 
 import random as rand
 
-MAX_ENERGY = 5 # make sure this is consistent with Body's number!!
-BASE_CONSUMPTION = 0.1
+MAX_ENERGY = 200 # make sure this is consistent with Body's number!!
+BASE_CONSUMPTION = 10
 PROLIFERATION_COST = BASE_CONSUMPTION * 10
 
 class Cell:
@@ -53,10 +53,9 @@ class Cell:
         daughter_location = None
         # TODO: Mutate?
         if hazards > self.hazard_resistance or self.energy_budget < 0:
-            if verbose:
-                print("DEAD:")
-                print("energy: ", self.energy_budget)
-                print("hazards: ", hazards)
+            #print("DEAD:")
+            #print("energy: ", self.energy_budget)
+            #print("hazards: ", hazards)
             if verbose:
                 print(self.energy_budget, 'dead')
             # Die
